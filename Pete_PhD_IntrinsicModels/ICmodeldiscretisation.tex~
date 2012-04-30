@@ -1,0 +1,118 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{IEEEtrantools}
+
+%opening
+\title{Discretisation of Intrinsic Coordinate Dynamic Models}
+\author{Pete Bunch}
+
+\begin{document}
+\maketitle
+
+\section{Differential Equations of Motion in Intrinsic Coordinates}
+
+Define position, $\mathbf{r}(t)$, velocity, $\mathbf{v}(t)$, and acceleration, $\mathbf{a}(t)$ and a set of unit vectors tangential, normal, and binormal to the motion,
+%
+\begin{IEEEeqnarray}{rCl}
+ \mathbf{e}_{T}(t) &\propto& \mathbf{v}(t) \\
+ \mathbf{e}_{B}(t) &\propto& \mathbf{v}(t) \times \mathbf{a}(t) \\
+ \mathbf{e}_{N}(t) & =     & \mathbf{e}_{B}(t) \times \mathbf{e}_{T}(t)     .
+\end{IEEEeqnarray}
+
+We'll also need the speed,
+%
+\begin{IEEEeqnarray}{rCl}
+ \dot{s}(t) &=& |\mathbf{v}(t)|     .
+\end{IEEEeqnarray}
+
+Begin by looking at how the unit vectors differentiate,
+%
+\begin{IEEEeqnarray}{rCl}
+ \dot{\mathbf{e}}_{T}(t) & = & \dot{\psi}(t) \mathbf{e}_{N}(t) \\
+ \dot{\mathbf{e}}_{B}(t) & = & \dot{\phi}(t) \mathbf{e}_{N}(t) \\
+ \dot{\mathbf{e}}_{N}(t) & = & - \dot{\psi}(t) \mathbf{e}_{T}(t) - \dot{\phi}(t) \mathbf{e}_{B}(t) \\
+\end{IEEEeqnarray}
+
+\noindent where $\dot{\psi}(t)$ is the instantaneous rate of turn, and $\dot{\phi}(t)$ is the instantaneous rate of roll.
+
+Now we can write the acceleration as,
+%
+\begin{IEEEeqnarray}{rCl}
+\mathbf{a}(t) &=& \dot{\mathbf{v}}(t) \nonumber \\
+              &=& \frac{d}{dt}\left( \dot{s}(t) \mathbf{e}_{T}(t) \right) \nonumber \\
+              &=& \ddot{s}(t) \mathbf{e}_{T}(t) + \dot{s}(t) \dot{\mathbf{e}}_{T}(t) \nonumber \\
+              &=& \underbrace{\ddot{s}(t)}_{a_T} \mathbf{e}_{T}(t) + \underbrace{\dot{s}(t) \dot{\psi}(t)}_{a_N} \mathbf{e}_{N}(t)     ,
+\end{IEEEeqnarray}
+
+
+
+The principle upon which the discretisation is based is that $a_T$ and $a_N$ are constant for the duration of a ``manoeuvre'',
+%
+\begin{IEEEeqnarray}{rCl}
+ \ddot{s}(t) &=& a_T \nonumber \\
+ \dot{s}(t) \dot{\psi}(t) &=& a_N     .
+\end{IEEEeqnarray}
+
+Alone, this is not sufficient to render the model analytically solvable, but lets see how far we can get. First the speed,
+%
+\begin{IEEEeqnarray}{rCl}
+ \dot{s}(t) &=& s_0 + a_T t     ,
+\end{IEEEeqnarray}
+ 
+\noindent where $s_0 = s(0)$ is the fixed intial value. Second the rotation,
+%
+\begin{IEEEeqnarray}{rCl}
+ \dot{\psi}(t) &=& \frac{a_N}{ \dot{s}(t) } \nonumber \\
+               &=& \frac{a_N}{ s_0 + a_T t } \nonumber \\
+ \Delta \psi(t)   &=& \frac{a_N}{a_T} \log \left[ \frac{s(t)}{s_0} \right]     .
+\end{IEEEeqnarray}
+
+The variable $\Delta \psi(t)$ is the total rotation since the start of the manoeuvre. In general, there is no reason for this rotation to lie within a plane, so $\Delta \psi(t)$ is \emph{not} the same as the angle between $\mathbf{e}_{T}(0)$ and $\mathbf{e}_{T}(t)$.
+
+Now we group the unit vector differential equations together into a matrix equation,
+%
+\begin{IEEEeqnarray}{rCl}
+\underbrace{\frac{d}{dt}\begin{bmatrix}\mathbf{e}_T(t)^T \\ \mathbf{e}_N(t)^T \\ \mathbf{e}_B(t)^T \end{bmatrix}}_{\dot{E}(t)} &=& \underbrace{\begin{bmatrix}0 & \dot{\psi}(t) & 0 \\ - \dot{\psi}(t) & 0 & - \dot{\phi}(t) \\ 0 & \dot{\phi}(t) & 0 \end{bmatrix}}_{F(t)} \underbrace{\begin{bmatrix}\mathbf{e}_{T}^T(t) \\ \mathbf{e}_{N}^T(t) \\ \mathbf{e}_{B}^T(t) \end{bmatrix}}_{E(t)}      .
+\end{IEEEeqnarray}
+
+This can then be solved by comparison with the following matrix exponential identity,
+%
+\begin{IEEEeqnarray}{rCl}
+ A(t) &=& \exp \left(B(t)\right) \nonumber \\
+ \dot{A}(t) &=& \dot{B}(t) \exp \left(B(t)\right) \nonumber \\
+ \dot{A}(t) &=& \dot{B}(t) A(t)
+\end{IEEEeqnarray}
+
+Thus, the solution is,
+%
+\begin{IEEEeqnarray}{rCl}
+ E(t) &=& \exp \left( \int F(t) dt \right)    .
+\end{IEEEeqnarray}
+
+We don't know what this is, but for now, define a variable for the change in roll, 
+%
+\begin{IEEEeqnarray}{rCl}
+ \Delta \phi(t) &=& \int_0^t \dot{\phi}(\tau) d\tau
+\end{IEEEeqnarray}
+
+The matrix integral can now be written as,
+%
+\begin{IEEEeqnarray}{rCl}
+ M(t) &=& \int F(t) dt \nonumber \\
+      &=& 
+\end{IEEEeqnarray}
+
+
+
+
+
+\section{Planar Motion}
+
+
+
+
+
+\section{Constant Roll}
+
+\end{document}
