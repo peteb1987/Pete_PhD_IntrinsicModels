@@ -3,6 +3,9 @@
 \usepackage{amsmath}
 \usepackage{IEEEtrantools}
 
+\usepackage{mdwmath}
+\usepackage{mdwtab}
+
 %opening
 \title{Discretisation of Intrinsic Coordinate Dynamic Models}
 \author{Pete Bunch}
@@ -31,7 +34,7 @@ Begin by looking at how the unit vectors differentiate,
 \begin{IEEEeqnarray}{rCl}
  \dot{\mathbf{e}}_{T}(t) & = & \dot{\psi}(t) \mathbf{e}_{N}(t) \\
  \dot{\mathbf{e}}_{B}(t) & = & \dot{\phi}(t) \mathbf{e}_{N}(t) \\
- \dot{\mathbf{e}}_{N}(t) & = & - \dot{\psi}(t) \mathbf{e}_{T}(t) - \dot{\phi}(t) \mathbf{e}_{B}(t) \\
+ \dot{\mathbf{e}}_{N}(t) & = & - \dot{\psi}(t) \mathbf{e}_{T}(t) - \dot{\phi}(t) \mathbf{e}_{B}(t)
 \end{IEEEeqnarray}
 
 \noindent where $\dot{\psi}(t)$ is the instantaneous rate of turn, and $\dot{\phi}(t)$ is the instantaneous rate of roll.
@@ -65,7 +68,8 @@ Alone, this is not sufficient to render the model analytically solvable, but let
 \begin{IEEEeqnarray}{rCl}
  \dot{\psi}(t) &=& \frac{a_N}{ \dot{s}(t) } \nonumber \\
                &=& \frac{a_N}{ s_0 + a_T t } \nonumber \\
- \Delta \psi(t)   &=& \frac{a_N}{a_T} \log \left[ \frac{s(t)}{s_0} \right]     .
+ \Delta \psi(t) &=& \int_0^t \dot{\psi}(\tau) d\tau \nonumber \\
+                &=& \frac{a_N}{a_T} \log \left[ \frac{s(t)}{s_0} \right]     .
 \end{IEEEeqnarray}
 
 The variable $\Delta \psi(t)$ is the total rotation since the start of the manoeuvre. In general, there is no reason for this rotation to lie within a plane, so $\Delta \psi(t)$ is \emph{not} the same as the angle between $\mathbf{e}_{T}(0)$ and $\mathbf{e}_{T}(t)$.
@@ -81,7 +85,7 @@ This can then be solved by comparison with the following matrix exponential iden
 \begin{IEEEeqnarray}{rCl}
  A(t) &=& \exp \left(B(t)\right) \nonumber \\
  \dot{A}(t) &=& \dot{B}(t) \exp \left(B(t)\right) \nonumber \\
- \dot{A}(t) &=& \dot{B}(t) A(t)
+            &=& \dot{B}(t) A(t)     .
 \end{IEEEeqnarray}
 
 Thus, the solution is,
@@ -112,20 +116,94 @@ To summarise,
  M(t) &=& \begin{bmatrix}0 & \Delta \psi(t) & 0 \\ - \Delta \psi(t) & 0 & - \Delta \phi(t) \\ 0 & \Delta \phi(t) & 0 \end{bmatrix} \nonumber \\
  \Delta \psi(t) &=& \frac{a_N}{a_T} \log \left[ \frac{s(t)}{s_0} \right] \nonumber \\
  \Delta \phi(t) &=& \int_0^t \dot{\phi}(\tau) d\tau \nonumber \\
- \dot{s}(t) &=& s_0 + a_T t \nonumber
+ \dot{s}(t) &=& s_0 + a_T t \nonumber     .
 \end{IEEEeqnarray}
 
-
+To complete the picture, we need to make an assumption which defines $\dot{\phi}(t)$. The velocity and position can then be recovered using,
+%
+\begin{IEEEeqnarray}{rCl}
+ \mathbf{v}(t) &=& \dot{s}(t) \mathbf{e}_{T}(t) \\
+ \mathbf{r}(t) &=& \int_0^t \mathbf{v}(\tau) d\tau     .
+\end{IEEEeqnarray}
 
 
 
 
 \section{Planar Motion}
 
+The simplest solution results from the assumption $\dot{\phi}(t) = 0$. In this case,
+%
+\begin{IEEEeqnarray}{rCl}
+ \Delta \phi(t) &=& 0 \nonumber \\
+ A(t) &=& \begin{bmatrix} \cos(\Delta \psi(t)) & \sin(\Delta \psi(t)) & 0 \\
+                         -\sin(\Delta \psi(t)) & \cos(\Delta \psi(t)) & 0 \\
+                          0                    & 0                    & 0 \end{bmatrix}
+\end{IEEEeqnarray}
 
+This describes motion within the plane spanned by $\mathbf{e}_{T}(0)$ and $\mathbf{e}_{N}(0)$. If $\mathbf{e}_{B}(0) = \mathbf{k}$, then this reduces to the 2D model, in which velocity may be expressed in terms of speed and heading.
+
+The velocity and position are given by,
+%
+\begin{IEEEeqnarray}{rCl}
+ \mathbf{v}(t) &=& \dot{s}(t) \left[ \cos(\Delta \psi(t)) \mathbf{e}_{T}(0) + \sin(\Delta \psi(t)) \mathbf{e}_{N}(0) \right] \\
+ \mathbf{r}(t) &=& \int_0^t \mathbf{v}(\tau) d\tau \nonumber \\
+               &=& \mathbf{r}(0) + \frac{1}{a_{N}^2 + 4 a_{T}^2} \nonumber \\
+& & \times \left[ \left[ \left( 2 a_{T} \cos(\Delta \psi(t)) +   a_{N} \sin(\Delta \psi(t)) \right) \dot{s}(t)^2 - 2 a_{T} \dot{s}(0)^2 \right] \mathbf{e}_T(t) \right. \nonumber \\
+& & \: + \left. \left[ \left(  -a_{N} \cos(\Delta \psi(t)) + 2 a_{T} \sin(\Delta \psi(t)) \right) \dot{s}(t)^2 +   a_{N} \dot{s}(0)^2 \right] \mathbf{e}_N(t) \right]     .
+\end{IEEEeqnarray}
 
 
 
 \section{Constant Roll}
+
+Things get more complex as soon as we allow a non zero roll rate. Say we introduce another parameter $r_R$, such that,
+%
+\begin{IEEEeqnarray}{rCl}
+ \Delta \phi(t) &=& r_R t     .
+\end{IEEEeqnarray}
+
+Now the expression for $A(t)$ becomes pretty horrendous! Analytic equations exist for $\mathbf{v}(t)$, but they are not integrable, so $\mathbf{r}(t)$ cannot be calculated.
+
+We can make some headway if we impose the condition that either $a_T$, $a_N$ or $r_R$ should be $0$ at all times. The last case has already been addressed in the planar case. For $a_T = 0$, we get some thoroughly horrible, although ultimately tractable equations. For $a_N = 0$, we get very simple equations.
+
+
+
+\section{Initialisation}
+
+We need a procedure for specifying the initial normal and binormal unit vectors. This can be done by introducing a new parameter, $\phi_0$, to indicate the angle between the binormal vector and the vertical plane containing the velocity vector.
+%
+\begin{tabular}{lm{4cm}}
+\renewcommand{\arraystretch}{1.5}
+\\
+Perpendicular to the                    & $\mathbf{e}_{T,0} \cdot \mathbf{e}_{B,0} = 0$ \\
+tangential vector:                      &  \\
+Unit magnitude:                         & $\left| \mathbf{e}_{B,0} \right| = 1$         \\
+Angle $\phi_{0}$ to the                 &  \\
+vertical plane:                         & $\mathbf{e}_{B,0} \cdot \frac{\mathbf{e}_{T,0} \times \mathbf{k}}{\left|\mathbf{e}_{T,0} \times \mathbf{k}\right|} = \sin(\phi_{0})$ \\ \\
+\end{tabular}
+
+\noindent where $\mathbf{k}$ is the $z$ axis unit vector. Solving these, it may be shown that if $\mathbf{e}_{T,0} = [e_{T1,0}, e_{T2,0}, e_{T3,0}]^T$, then the binormal unit vector is given by,
+%
+\begin{IEEEeqnarray}{rCl}
+ \mathbf{e}_{B,k} = \begin{bmatrix}
+                    \frac{e_{T2,0} \sin(\phi_0) - e_{T1,0} e_{T3,0} \cos(\phi_0)}{\sqrt{e_{T1,0}^2+e_{T2,0}^2}} \\
+                    \frac{-e_{T1,0} \sin(\phi_0) - e_{T2,0} e_{T3,0} \cos(\phi_0)}{\sqrt{e_{T1,0}^2+e_{T2,0}^2}} \\
+                    \cos(\phi_0) \sqrt{e_{T1,0}^2+e_{T2,0}^2}
+                \end{bmatrix}     .
+\end{IEEEeqnarray}
+
+Finally, the normal unit vector is given by,
+%
+\begin{IEEEeqnarray}{rCl}
+ \mathbf{e}_{N,0} = \mathbf{e}_{B,0} \times \mathbf{e}_{T,0}
+\end{IEEEeqnarray}
+
+
+
+\section{Gravity}
+
+It would be nice to include gravity, but it does not fit easily into the framework. It can be approximated over short time by just adding a gravity term to the velocity and position equations.
+
+
 
 \end{document}
