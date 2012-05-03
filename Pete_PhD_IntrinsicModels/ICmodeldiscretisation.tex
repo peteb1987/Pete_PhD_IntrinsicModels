@@ -174,7 +174,16 @@ I thought it was possible to extend the model by making an assumption about the 
  \Delta \phi(t) &=& r_R t     .
 \end{IEEEeqnarray}
 
-However, this actually renders (\label{eq:matrixdiffeq}) unsolvable, so we're stuffed.
+However, this actually renders (\ref{eq:matrixdiffeq}) unsolvable, so we're stuffed.
+
+The most promising approach appears to be transforming $F(t)$, using an eigen-decomposition or the skew-symmetric decomposition,
+%
+\begin{IEEEeqnarray}{rCl}
+ F(t) & = & U(t) \Sigma(t) U(t)^T \\
+ U(t) & = & \begin{bmatrix} \frac{\dot{\psi}(t)}{h(t)} & 0 & \frac{-\dot{\phi}(t)}{h(t)} \\ 0 & 1 & 0 \\ \frac{\dot{\phi}(t)}{h(t)} & 0 & \frac{\dot{\psi}(t)}{h(t)} \end{bmatrix} \\
+ \Sigma(t) & = & \begin{bmatrix} 0 & h(t) & 0 \\ -h(t) & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} \\
+ h(t) & = & \sqrt{\dot{\psi}^2 + \dot{\phi}^2}     .
+\end{IEEEeqnarray}
 
 %Things get more complex as soon as we allow a non zero roll rate. Say we introduce another parameter $r_R$, such that,
 %%

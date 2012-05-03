@@ -77,7 +77,7 @@ The variable $\Delta \psi(t)$ is the total rotation since the start of the manoe
 Now we group the unit vector differential equations together into a matrix equation,
 %
 \begin{IEEEeqnarray}{rCl}
-\underbrace{\frac{d}{dt}\begin{bmatrix}\mathbf{e}_T(t)^T \\ \mathbf{e}_N(t)^T \\ \mathbf{e}_B(t)^T \end{bmatrix}}_{\dot{E}(t)} &=& \underbrace{\begin{bmatrix}0 & \dot{\psi}(t) & 0 \\ - \dot{\psi}(t) & 0 & - \dot{\phi}(t) \\ 0 & \dot{\phi}(t) & 0 \end{bmatrix}}_{F(t)} \underbrace{\begin{bmatrix}\mathbf{e}_{T}^T(t) \\ \mathbf{e}_{N}^T(t) \\ \mathbf{e}_{B}^T(t) \end{bmatrix}}_{E(t)}      .
+\underbrace{\frac{d}{dt}\begin{bmatrix}\mathbf{e}_T(t)^T \\ \mathbf{e}_N(t)^T \\ \mathbf{e}_B(t)^T \end{bmatrix}}_{\dot{E}(t)} &=& \underbrace{\begin{bmatrix}0 & \dot{\psi}(t) & 0 \\ - \dot{\psi}(t) & 0 & - \dot{\phi}(t) \\ 0 & \dot{\phi}(t) & 0 \end{bmatrix}}_{F(t)} \underbrace{\begin{bmatrix}\mathbf{e}_{T}^T(t) \\ \mathbf{e}_{N}^T(t) \\ \mathbf{e}_{B}^T(t) \end{bmatrix}}_{E(t)} \label{eq:matrixdiffeq}     .
 \end{IEEEeqnarray}
 
 In general, this non-homogeneous matrix differential equation has no solution. We can find solutions for particular cases.
@@ -137,7 +137,7 @@ For a skew-symmetric matrix with only one non-zero term, $X(t)$, it may be shown
             &=& \dot{X}(t) Y(t)     .
 \end{IEEEeqnarray}
 
-Note that this is also true if $X(t)$ is independent of $t$, but not in general. Using this identity, the solution is,
+Note that this is true because $F(t_1)F(t_2)=F(t_2)F(t_1)$, which is also true if $X(t)$ is independent of $t$, but not in general. Using this identity, the solution is,
 %
  \begin{IEEEeqnarray}{rCl}
  E(t) &=& \exp \left( \int_0^t F(\tau) d\tau + K \right) \nonumber \\
@@ -168,15 +168,32 @@ The velocity and position are given by,
 
 \section{Constant Roll}
 
-Things get more complex as soon as we allow a non zero roll rate. Say we introduce another parameter $r_R$, such that,
+I thought it was possible to extend the model by making an assumption about the roll rate, e.g.,
 %
 \begin{IEEEeqnarray}{rCl}
  \Delta \phi(t) &=& r_R t     .
 \end{IEEEeqnarray}
 
-Now the expression for $A(t)$ becomes pretty horrendous! Analytic equations exist for $\mathbf{v}(t)$, but they are not integrable, so $\mathbf{r}(t)$ cannot be calculated.
+However, this actually renders (\label{eq:matrixdiffeq}) unsolvable, so we're stuffed.
 
-We can make some headway if we impose the condition that either $a_T$, $a_N$ or $r_R$ should be $0$ at all times. The last case has already been addressed in the planar case. For $a_T = 0$, we get some thoroughly horrible, although ultimately tractable equations. For $a_N = 0$, we get very simple equations.
+The most promising approach appears to be transforming $F(t)$, using an eigen-decomposition or the skew-symmetric decomposition,
+%
+\begin{IEEEeqnarray}{rCl}
+ F(t) & = & U(t) \Sigma(t) U(t)^T \\
+ U(t) & = & \begin{bmatrix} \frac{\dot{\psi}(t)}{h(t)} & 0 & \frac{-\dot{\phi}(t)}{h(t)} \\ 0 & 1 & 0 \\ \frac{\dot{\phi}(t)}{h(t)} & 0 & \frac{\dot{\psi}(t)}{h(t)} \end{bmatrix} \\
+ \Sigma(t) & = & \begin{bmatrix} 0 & h(t) & 0 \\ -h(t) & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} \\
+ h(t) & = & \sqrt{\dot{\psi}^2 + \dot{\phi}^2}     .
+\end{IEEEeqnarray}
+
+%Things get more complex as soon as we allow a non zero roll rate. Say we introduce another parameter $r_R$, such that,
+%%
+%\begin{IEEEeqnarray}{rCl}
+% \Delta \phi(t) &=& r_R t     .
+%\end{IEEEeqnarray}
+%
+%Now the expression for $A(t)$ becomes pretty horrendous! Analytic equations exist for $\mathbf{v}(t)$, but they are not integrable, so $\mathbf{r}(t)$ cannot be calculated.
+%
+%We can make some headway if we impose the condition that either $a_T$, $a_N$ or $r_R$ should be $0$ at all times. The last case has already been addressed in the planar case. For $a_T = 0$, we get some thoroughly horrible, although ultimately tractable equations. For $a_N = 0$, we get very simple equations.
 
 
 
