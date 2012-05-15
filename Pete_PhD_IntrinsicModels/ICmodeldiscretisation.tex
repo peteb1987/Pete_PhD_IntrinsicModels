@@ -2,9 +2,12 @@
 
 \usepackage{amsmath}
 \usepackage{IEEEtrantools}
+\usepackage{color}
 
 \usepackage{mdwmath}
 \usepackage{mdwtab}
+
+\newenvironment{meta}[0]{\color{red} \em}{}
 
 %opening
 \title{Discretisation of Intrinsic Coordinate Dynamic Models}
@@ -48,8 +51,6 @@ Now we can write the acceleration as,
               &=& \underbrace{\ddot{s}(t)}_{a_T} \mathbf{e}_{T}(t) + \underbrace{\dot{s}(t) \dot{\psi}(t)}_{a_N} \mathbf{e}_{N}(t)     ,
 \end{IEEEeqnarray}
 
-
-
 The principle upon which the discretisation is based is that $a_T$ and $a_N$ are constant for the duration of a ``manoeuvre'',
 %
 \begin{IEEEeqnarray}{rCl}
@@ -80,43 +81,48 @@ Now we group the unit vector differential equations together into a matrix equat
 \underbrace{\frac{d}{dt}\begin{bmatrix}\mathbf{e}_T(t)^T \\ \mathbf{e}_N(t)^T \\ \mathbf{e}_B(t)^T \end{bmatrix}}_{\dot{E}(t)} &=& \underbrace{\begin{bmatrix}0 & \dot{\psi}(t) & 0 \\ - \dot{\psi}(t) & 0 & - \dot{\phi}(t) \\ 0 & \dot{\phi}(t) & 0 \end{bmatrix}}_{F(t)} \underbrace{\begin{bmatrix}\mathbf{e}_{T}^T(t) \\ \mathbf{e}_{N}^T(t) \\ \mathbf{e}_{B}^T(t) \end{bmatrix}}_{E(t)} \label{eq:matrixdiffeq}     .
 \end{IEEEeqnarray}
 
-In general, this non-homogeneous matrix differential equation has no solution. We can find solutions for particular cases.
+The roll rate, $\dot{\phi}(t)$ is still not specified by the assumptions we've made so far. In general, this non-homogeneous matrix differential equation has no solution. However, we can find solutions for particular cases.
 
 
 
+\section{Solutions to Matrix Differential Equations}
 
-
-%We don't know what it is, but for now define a variable for the change in roll,
-%%
-%\begin{IEEEeqnarray}{rCl}
-% \Delta \phi(t) &=& \int_0^t \dot{\phi}(\tau) d\tau
-%\end{IEEEeqnarray}
+It is well known that the matrix exponential solves the matrix differential equation (\ref{eq:matrixdiffeq}) when $F(t)$ is constant with respect to time. In fact the class of problems for which this solution holds is larger. Consider the time derivative of the matrix exponential,
 %
-%The matrix integral can now be written as,
-%%
-%\begin{IEEEeqnarray}{rCl}
-% M(t) &=& \int_0^t F(\tau) d\tau \nonumber \\
-%      &=& \begin{bmatrix}0 & \Delta \psi(t) & 0 \\ - \Delta \psi(t) & 0 & - \Delta \phi(t) \\ 0 & \Delta \phi(t) & 0 \end{bmatrix}     .
-%\end{IEEEeqnarray}
+\begin{IEEEeqnarray}{rCl}
+ X(t)       & = & \exp \left\{ Q(t) \right\} = \sum_{n=0}^{\infty} \frac{1}{n!} Q(t)^n \nonumber \\
+ \dot{X}(t) & = & \sum_{n=1}^{\infty} \frac{1}{n!} \sum_{i=1}^{n} Q(t)^{n-i} \dot{Q}(t) Q(t)^{i-1} \nonumber \\
+            & = & \sum_{n=1}^{\infty} \frac{1}{n!} \underbrace{\sum_{i=1}^{n} \dot{Q}(t) Q(t)^{n-1}}_{n \dot{Q}(t) Q(t)^{n-1}} \label{eq:commute_with_deriv} \\
+            & = & \dot{Q}(t) \sum_{m=0}^{\infty} \frac{1}{m!} Q(t)^{m} \nonumber \\
+            & = & \dot{Q}(t) \exp\left\{ Q(t) \right\} \nonumber     .
+\end{IEEEeqnarray}
+
+Thus, the solution to (\ref{eq:matrixdiffeq}) follows by equating $\dot{Q}(t)$ and $F(t)$ and using the initial condition,
 %
-%To summarise,
-%%
-%\begin{IEEEeqnarray}{rCl}
-% E(t) &=& A(t) E(0) \nonumber \\
-% A(t) &=& \exp\left(M(t)\right) \nonumber \\
-% M(t) &=& \begin{bmatrix}0 & \Delta \psi(t) & 0 \\ - \Delta \psi(t) & 0 & - \Delta \phi(t) \\ 0 & \Delta \phi(t) & 0 \end{bmatrix} \nonumber \\
-% \Delta \psi(t) &=& \frac{a_N}{a_T} \log \left[ \frac{s(t)}{s_0} \right] \nonumber \\
-% \Delta \phi(t) &=& \int_0^t \dot{\phi}(\tau) d\tau \nonumber \\
-% \dot{s}(t) &=& s_0 + a_T t \nonumber     .
-%\end{IEEEeqnarray}
+\begin{IEEEeqnarray}{rCl}
+ E(t) &=& \exp \left( \int_0^t F(\tau) d\tau + K \right) \nonumber \\
+      &=& \underbrace{\exp \left( \int_0^t F(\tau) d\tau \right)}_{A(t)} E_0    .
+\end{IEEEeqnarray}
+
+In (\ref{eq:commute_with_deriv}), the condition required is that $Q(t)$ should commute with its derivative, i.e. $Q(t)\dot{Q}(t)=\dot{Q}(t)Q(t)$. From this it is straightforward to show that,
 %
-%To complete the picture, we need to make an assumption which defines $\dot{\phi}(t)$. The velocity and position can then be recovered using,
-%%
+\begin{IEEEeqnarray}{rCl}
+ Q(t)\dot{Q}(t) & = & \dot{Q}(t)Q(t) \nonumber \\
+ \int_0^t F(\tau) d\tau F(t) & = & F(t) \int_0^t F(\tau) d\tau \nonumber \\
+ \int_0^t F(\tau) F(t) d\tau & = & \int_0^t F(t) F(\tau) d\tau \nonumber \\
+ F(\tau) F(t) & = & F(t) F(\tau)     .
+\end{IEEEeqnarray}
+%
 %\begin{IEEEeqnarray}{rCl}
-% \mathbf{v}(t) &=& \dot{s}(t) \mathbf{e}_{T}(t) \\
-% \mathbf{r}(t) &=& \int_0^t \mathbf{v}(\tau) d\tau     .
+% Q(t)\dot{Q}(t) & = & \dot{Q}(t)Q(t) \nonumber \\
+% Q(t) \lim_{h\rightarrow0} \left[ \frac{Q(t+h)-Q(t)}{h} \right] & = &  \lim_{h\rightarrow0} \left[ \frac{Q(t+h)-Q(t)}{h} \right] Q(t) \nonumber \\
+% \lim_{h\rightarrow0} \left[ \frac{Q(t)Q(t+h)-Q(t)^2}{h} \right] & = &  \lim_{h\rightarrow0} \left[ \frac{Q(t+h)Q(t)-Q(t)^2}{h} \right] \nonumber \\
+% Q(t)Q(t+h) & = & Q(t+h)Q(t)     .
 %\end{IEEEeqnarray}
 
+So the matrix exponential solves the matrix differential equation when $F(t)$ commutes with itself with a time offset.
+
+{\meta Is this necessary and sufficient? Or just sufficient? Ask a mathematician.}
 
 
 
@@ -129,22 +135,26 @@ The simplest solution results from the assumption $\dot{\phi}(t) = 0$. In this c
  F(t) & = & \begin{bmatrix}0 & \dot{\psi}(t) & 0 \\ - \dot{\psi}(t) & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix}
 \end{IEEEeqnarray}
 
-For a skew-symmetric matrix with only one non-zero term, $X(t)$, it may be shown that,
+Testing the sufficient condition,
 %
 \begin{IEEEeqnarray}{rCl}
- Y(t) &=& \exp \left(X(t)\right) \nonumber \\
- \dot{Y}(t) &=& \dot{X}(t) \exp \left(X(t)\right) \nonumber \\
-            &=& \dot{X}(t) Y(t)     .
+ F(t_1)F(t_2) = F(t_2) F(t_1) = \begin{bmatrix} -\dot{\psi}(t_1)\dot{\psi}(t_2) & 0 & 0 \\ 0 & -\dot{\psi}(t_1)\dot{\psi}(t_2) & 0 \\ 0 & 0 & 0 \end{bmatrix}     .
 \end{IEEEeqnarray}
 
-Note that this is true because $F(t_1)F(t_2)=F(t_2)F(t_1)$, which is also true if $X(t)$ is independent of $t$, but not in general. Using this identity, the solution is,
+Hence the equation is solved by,
 %
- \begin{IEEEeqnarray}{rCl}
- E(t) &=& \exp \left( \int_0^t F(\tau) d\tau + K \right) \nonumber \\
-      &=& \underbrace{\exp \left( \int_0^t F(\tau) d\tau \right)}_{A(t)} E_0    ,
+\begin{IEEEeqnarray}{rCl}
+ E(t) & = & A(t) E_0 \\
+ A(t) & = & \exp \left\{ \int_0^t F(\tau) d\tau \right\}
 \end{IEEEeqnarray}
 
-\noindent where $E_0 = E(0)$ and the second line follows from the intial conditions. By diagonalisation, the matrix exponential is given by,
+This may be solved by diagonalisation.
+%
+\begin{IEEEeqnarray}{rCl}
+ F(t) & = & \begin{bmatrix} \frac{i}{\sqrt{2}} & -\frac{i}{\sqrt{2}} & 0 \\ \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0 \\ 0 & 0 & 1 \end{bmatrix}  \begin{bmatrix} -\frac{a_N i}{s(t)} & 0 & 0 \\ 0 & \frac{a_N i}{s(t)} & 0 \\ 0 & 0 & 0 \end{bmatrix} \begin{bmatrix} \frac{i}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0 \\ \frac{-i}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0 \\ 0 & 0 & 1 \end{bmatrix}
+\end{IEEEeqnarray}
+
+After some tedious algebra, the matrix exponential is given by,
 %
 \begin{IEEEeqnarray}{rCl}
  A(t) &=& \begin{bmatrix} \cos(\Delta \psi(t)) & \sin(\Delta \psi(t)) & 0 \\
@@ -157,24 +167,36 @@ This describes motion within the plane spanned by $\mathbf{e}_{T}(0)$ and $\math
 The velocity and position are given by,
 %
 \begin{IEEEeqnarray}{rCl}
- \mathbf{v}(t) &=& \dot{s}(t) \left[ \cos(\Delta \psi(t)) \mathbf{e}_{T}(0) + \sin(\Delta \psi(t)) \mathbf{e}_{N}(0) \right] \\
- \mathbf{r}(t) &=& \int_0^t \mathbf{v}(\tau) d\tau \nonumber \\
-               &=& \mathbf{r}(0) + \frac{1}{a_{N}^2 + 4 a_{T}^2} \nonumber \\
-& & \times \left[ \left[ \left( 2 a_{T} \cos(\Delta \psi(t)) +   a_{N} \sin(\Delta \psi(t)) \right) \dot{s}(t)^2 - 2 a_{T} \dot{s}(0)^2 \right] \mathbf{e}_T(t) \right. \nonumber \\
-& & \: + \left. \left[ \left(  -a_{N} \cos(\Delta \psi(t)) + 2 a_{T} \sin(\Delta \psi(t)) \right) \dot{s}(t)^2 +   a_{N} \dot{s}(0)^2 \right] \mathbf{e}_N(t) \right]     .
+ \mathbf{v}(t)^T & = & \dot{s}(t) \mathbf{e}_{T}(t)^T \nonumber \\
+                 & = & \dot{s}(t) \begin{bmatrix} 1 & 0 & 0 \end{bmatrix} E(t) \\
+                 & = & \begin{bmatrix} 1 & 0 & 0 \end{bmatrix} \dot{s}(t) A(t) E_0 \\
+ \mathbf{r}(t)^T & = & \int_0^t \mathbf{v}(\tau)^T d\tau \nonumber \\
+                 & = & \begin{bmatrix} 1 & 0 & 0 \end{bmatrix} \int_0^t \dot{s}(\tau) A(\tau) d\tau E_0 \nonumber \\
+                 & = & \frac{1}{a_N^2+ 4 a_T^2} \begin{bmatrix} 2 a_T & a_N & 0 \end{bmatrix} \begin{bmatrix} \zeta_1(t) & \zeta_2(t) & 0 \\ \zeta_2(t) & -\zeta_1(t) & 0 \\ 0 & 0 & 0 \end{bmatrix} E_0 \nonumber \\
+ \zeta_1(t)      & = & \cos(\Delta \psi(t))\dot{s}(t)-\dot{s}_0 \nonumber \\
+ \zeta_2(t)      & = & \sin(\Delta \psi(t))\dot{s}(t) \nonumber     .
 \end{IEEEeqnarray}
 
+The unpleasant intermediate integration and factorisation used here is,
+%
+{\tiny
+\begin{IEEEeqnarray}{rCl}
+ \int_0^t \dot{s}(\tau) A(\tau) d\tau & = &\begin{bmatrix} \frac{1}{a_N^2+ 4 a_T^2} \left\{ 2 a_T \left[\cos(\Delta \psi(t))\dot{s}(t)-\dot{s}_0\right] + a_N \sin(\Delta \psi(t))\dot{s}(t) \right\} & \frac{1}{a_N^2+ 4 a_T^2} \left\{ -a_N \left[\cos(\Delta \psi(t))\dot{s}(t)-\dot{s}_0\right] + 2 a_T \sin(\Delta \psi(t))\dot{s}(t) \right\} & 0 \\ \frac{1}{a_N^2+ 4 a_T^2} \left\{ a_N \left[\cos(\Delta \psi(t))\dot{s}(t)-\dot{s}_0\right] - 2 a_T \sin(\Delta \psi(t))\dot{s}(t) \right\} & \frac{1}{a_N^2+ 4 a_T^2} \left\{ 2 a_T \left[\cos(\Delta \psi(t))\dot{s}(t)-\dot{s}_0\right] + a_N \sin(\Delta \psi(t))\dot{s}(t) \right\} & 0 \\ 0 & 0 & 0 \end{bmatrix} \nonumber \\
+ & = & \frac{1}{a_N^2+ 4 a_T^2} \begin{bmatrix} 2 a_T & a_N & 0 \\ aN & -2 a_T & 0 \\ 0 & 0 & 0 \end{bmatrix} \begin{bmatrix} \cos(\Delta \psi(t))\dot{s}(t)-\dot{s}_0 & \sin(\Delta \psi(t))\dot{s}(t) & 0 \\ \sin(\Delta \psi(t))\dot{s}(t) & -(\cos(\Delta \psi(t))\dot{s}(t)-\dot{s}_0) & 0 \\ 0 & 0 & 0 \end{bmatrix} \nonumber     .
+\end{IEEEeqnarray}
+}
 
 
-\section{Constant Roll}
 
-I thought it was possible to extend the model by making an assumption about the roll rate, e.g.,
+\section{Constant Roll Rate}
+
+At one point I thought, erroneously, that it was possible to extend the model by assuming the roll rate to be constant,
 %
 \begin{IEEEeqnarray}{rCl}
  \Delta \phi(t) &=& r_R t     .
 \end{IEEEeqnarray}
 
-However, this actually renders (\ref{eq:matrixdiffeq}) unsolvable, so we're stuffed.
+However, I think this actually renders (\ref{eq:matrixdiffeq}) unsolvable, so we're stuffed.
 
 The most promising approach appears to be transforming $F(t)$, using an eigen-decomposition or the skew-symmetric decomposition,
 %
@@ -185,22 +207,66 @@ The most promising approach appears to be transforming $F(t)$, using an eigen-de
  h(t) & = & \sqrt{\dot{\psi}^2 + \dot{\phi}^2}     .
 \end{IEEEeqnarray}
 
-%Things get more complex as soon as we allow a non zero roll rate. Say we introduce another parameter $r_R$, such that,
-%%
-%\begin{IEEEeqnarray}{rCl}
-% \Delta \phi(t) &=& r_R t     .
-%\end{IEEEeqnarray}
-%
-%Now the expression for $A(t)$ becomes pretty horrendous! Analytic equations exist for $\mathbf{v}(t)$, but they are not integrable, so $\mathbf{r}(t)$ cannot be calculated.
-%
-%We can make some headway if we impose the condition that either $a_T$, $a_N$ or $r_R$ should be $0$ at all times. The last case has already been addressed in the planar case. For $a_T = 0$, we get some thoroughly horrible, although ultimately tractable equations. For $a_N = 0$, we get very simple equations.
 
+
+\section{Proportional Roll Rate}
+
+We can get an analytic solution if we assume the following form for the roll rate,
+%
+\begin{IEEEeqnarray}{rCl}
+ \Delta \phi(t) & = & \frac{a_R}{\dot{s}(t)}     .
+\end{IEEEeqnarray}
+
+This allows the matrix in the differential equation to be factorised as,
+%
+\begin{IEEEeqnarray}{rCl}
+ F(t) & = & \frac{1}{\dot{s}(t)} \underbrace{\begin{bmatrix} 0 & a_N & 0 \\ -a_N & 0 & -a_R \\ 0 & a_R & 0 \end{bmatrix}}_{\bar{F}}     .
+\end{IEEEeqnarray}
+
+This (obviously) satisfies our condition for a matrix exponential solution. Hence the equation is solved by,
+%
+\begin{IEEEeqnarray}{rCl}
+ E(t) & = & A(t) E_0 \\
+ A(t) & = & \exp \left\{ \int_0^t F(\tau) d\tau \right\} \nonumber \\
+      & = & \exp \left\{ \bar{F} \int_0^t \frac{1}{\dot{s}(t)} d\tau \right\}
+\end{IEEEeqnarray}
+
+This matrix exponential may be found analytically using a modified form of the theorem of \cite{Bernstein1993} (section IV). See appendix~\ref{app:ssmatrixexp}.
+%
+\begin{IEEEeqnarray}{rCl}
+ A(t) & = & \exp \left\{ \bar{F} \vartheta(t) \right\} \nonumber \\
+      & = & I + \frac{\bar{F}}{a_C} \sin(a_C \vartheta(t)) - \frac{\bar{F}^2}{a_c^2} \left[ \cos(a_C \vartheta(t)) - 1 \right] \\
+ a_C          & = & \sqrt{a_N^2 + a_R^2} \\
+ \vartheta(t) & = & \int_0^t \frac{1}{\dot{s}(t)} d\tau \nonumber \\
+              & = & \frac{1}{a_T} \log \left[ \frac{\dot{s}(t)}{\dot{s}_0} \right]
+\end{IEEEeqnarray}
+
+The velocity and position are given by,
+%
+\begin{IEEEeqnarray}{rCl}
+ \mathbf{v}(t)^T & = & \dot{s}(t) \mathbf{e}_{T}(t)^T \nonumber \\
+                 & = & \dot{s}(t) \begin{bmatrix} 1 & 0 & 0 \end{bmatrix} E(t) \\
+                 & = & \begin{bmatrix} 1 & 0 & 0 \end{bmatrix} \dot{s}(t) A(t) E_0 \\
+ \mathbf{r}(t)^T & = & \int_0^t \mathbf{v}(\tau)^T d\tau \nonumber \\
+                 & = & \begin{bmatrix} 1 & 0 & 0 \end{bmatrix} \int_0^t \dot{s}(\tau) A(\tau) d\tau E_0 \nonumber \\
+ \int_0^t \dot{s}(\tau) A(\tau) d\tau & = & \left[ I + \frac{\bar{F}^2}{a_C^2} \right] \left( s_0 t + \frac{1}{2} a_T t^2 \right) \nonumber \\
+                                      &   & + \: \frac{\bar{F}}{a_C(a_C^2+4a_T^2)} \left[ 2a_T \zeta_2(t) - a_C \zeta_1(t) \right] \\
+                                      &   & - \: \frac{\bar{F}^2}{a_C^2(a_C^2+4a_T^2)} \left[ a_C \zeta_2(t) + 2a_T \zeta_1(t) \right] \\
+ \zeta_1(t)      & = & \cos(a_C \vartheta(t))\dot{s}(t)-\dot{s}_0 \nonumber \\
+ \zeta_2(t)      & = & \sin(a_C \vartheta(t))\dot{s}(t) \nonumber     .
+\end{IEEEeqnarray}
+
+{\meta Check this integration.}
+
+Thus, at last, we have everything we need to calculate $\mathbf{r}(t)$ and $\mathbf{v}(t)$ given initial values (and an initial roll --- see next section). This gives us an analytic solution for a type of non-planar trajectory, based upon an additional assumption of the form of the roll rate. The question is, whether it is a realistic assumption. It may not be sensible at all.
+
+The planar model may be recovered as a special case by setting $a_R = 0$ throughout.
 
 
 \section{Initialisation}
 
-We need a procedure for specifying the initial normal and binormal unit vectors. This can be done by introducing a new parameter, $\phi_0$, to indicate the angle between the binormal vector and the vertical plane containing the velocity vector.
-%
+Assuming we know the initial speed and velocity, we still need a procedure for specifying the initial normal and binormal unit vectors. This can be done by introducing a new parameter, $\phi_0$, to indicate the initial angle between the binormal vector and the vertical plane containing the velocity vector.
+
 \begin{tabular}{lm{4cm}}
 \renewcommand{\arraystretch}{1.5}
 \\
@@ -231,8 +297,64 @@ Finally, the normal unit vector is given by,
 
 \section{Gravity}
 
-It would be nice to include gravity, but it does not fit easily into the framework. It can be approximated over short time by just adding a gravity term to the velocity and position equations.
+It would be nice to include gravity, but it does not fit easily into the framework. It can be linearly approximated over short time by just adding a gravity term to the velocity and position equations.
 
 
 
+\appendix
+
+\section{Matrix Exponential of a class of Skew-Symmetric Matrices} \label{app:ssmatrixexp}
+
+Consider a matrix of the form,
+%
+\begin{IEEEeqnarray}{rCl}
+ A & = & \begin{bmatrix} 0 & a & 0 \\ -a & 0 & -b \\ 0 & b & 0 \end{bmatrix}     .
+\end{IEEEeqnarray}
+
+It can be shown that for $n>2$,
+%
+\begin{IEEEeqnarray}{rCl}
+ A^n & = & -(a^2+b^2) A^{n-2}     .
+\end{IEEEeqnarray}
+
+Proof is by induction. In both the following cases,
+%
+\begin{IEEEeqnarray}{rCl}
+ A^{n-2} & = & \begin{bmatrix} 0 & a_{n-2} & 0 \\ -a_{n-2} & 0 & -b_{n-2} \\ 0 & b_{n-2} & 0 \end{bmatrix} \nonumber \\
+ A^{n-2} & = & \begin{bmatrix} c_{n-2} & 0 & d_{n-2} \\ 0 & e_{n-2} & 0 \\ d_{n-2} & 0 & f_{n-2} \end{bmatrix} \nonumber     ,
+\end{IEEEeqnarray}
+
+\noindent then by calculation,
+%
+\begin{IEEEeqnarray}{rCl}
+ A^n & = & A^2 A^{n-2} = -(a^2+b^2) A^{n-2}     .
+\end{IEEEeqnarray}
+
+The first two powers are given by,
+%
+\begin{IEEEeqnarray}{rCl}
+ A^1 & = & \begin{bmatrix} 0 & a & 0 \\ -a & 0 & -b \\ 0 & b & 0 \end{bmatrix} \nonumber \\
+ A^2 & = & \begin{bmatrix} -a^2 & 0 & -ab \\ 0 & -(a^2+b^2) & 0 \\ -ab & 0 & -b^2 \end{bmatrix}     .
+\end{IEEEeqnarray}
+
+Thus we can write any power of $A$ as,
+%
+\begin{IEEEeqnarray}{rCl}
+ A^n & = & \begin{cases} \left[ -(a^2+b^2) \right]^{\frac{n-2}{2}} A^2 & n \text{ even} \\
+                         \left[ -(a^2+b^2) \right]^{\frac{n-1}{2}} A & n \text{ odd} \end{cases}
+\end{IEEEeqnarray}
+
+Now consider the matrix exponential of such a matrix multiplied by a scalar function,
+%
+\begin{IEEEeqnarray}{rCl}
+ \IEEEeqnarraymulticol{3}{l}{ \exp\left\{ A x(t) \right\} = \sum_{n=0}^{\infty} \frac{1}{n!} (A x(t))^n } \nonumber \\
+ & = & \sum_{n=0}^{\infty} \frac{1}{n!} A^n x(t)^n \nonumber \\
+ & = & I + \sum_{n=1 : n \text{ odd}}^{\infty} \frac{1}{n!} \left[ -(a^2+b^2) \right]^{\frac{n-1}{2}} A x(t)^n + \sum_{n=1 : n \text{ even}}^{\infty} \frac{1}{n!} \left[ -(a^2+b^2) \right]^{\frac{n-2}{2}} A^2 x(t)^n \nonumber \\
+ & = & I      + \frac{A}{\sqrt{a^2+b^2}} \sum_{n=1 : n \text{ odd}}^{\infty} (-1)^{\frac{n-1}{2}} \frac{1}{n!} \left[ \sqrt{a^2+b^2} x(t) \right]^{n}      - \frac{A^2}{a^2+b^2} \sum_{n=1 : n \text{ even}}^{\infty} (-1)^{\frac{n}{2}} \frac{1}{n!} \left[ \sqrt{a^2+b^2} x(t) \right]^{n} \nonumber \\
+ & = & I      + \frac{A}{\sqrt{a^2+b^2}} \sin(\sqrt{a^2+b^2} x(t))      - \left[ \cos(\sqrt{a^2+b^2} x(t)) - 1 \right] 
+\end{IEEEeqnarray}
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{D:/pb404/Dropbox/PhD/OTbib}
 \end{document}

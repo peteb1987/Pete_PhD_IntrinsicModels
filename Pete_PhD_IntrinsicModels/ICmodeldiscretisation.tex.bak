@@ -2,9 +2,12 @@
 
 \usepackage{amsmath}
 \usepackage{IEEEtrantools}
+\usepackage{color}
 
 \usepackage{mdwmath}
 \usepackage{mdwtab}
+
+\newenvironment{meta}[0]{\color{red} \em}{}
 
 %opening
 \title{Discretisation of Intrinsic Coordinate Dynamic Models}
@@ -48,8 +51,6 @@ Now we can write the acceleration as,
               &=& \underbrace{\ddot{s}(t)}_{a_T} \mathbf{e}_{T}(t) + \underbrace{\dot{s}(t) \dot{\psi}(t)}_{a_N} \mathbf{e}_{N}(t)     ,
 \end{IEEEeqnarray}
 
-
-
 The principle upon which the discretisation is based is that $a_T$ and $a_N$ are constant for the duration of a ``manoeuvre'',
 %
 \begin{IEEEeqnarray}{rCl}
@@ -80,7 +81,7 @@ Now we group the unit vector differential equations together into a matrix equat
 \underbrace{\frac{d}{dt}\begin{bmatrix}\mathbf{e}_T(t)^T \\ \mathbf{e}_N(t)^T \\ \mathbf{e}_B(t)^T \end{bmatrix}}_{\dot{E}(t)} &=& \underbrace{\begin{bmatrix}0 & \dot{\psi}(t) & 0 \\ - \dot{\psi}(t) & 0 & - \dot{\phi}(t) \\ 0 & \dot{\phi}(t) & 0 \end{bmatrix}}_{F(t)} \underbrace{\begin{bmatrix}\mathbf{e}_{T}^T(t) \\ \mathbf{e}_{N}^T(t) \\ \mathbf{e}_{B}^T(t) \end{bmatrix}}_{E(t)} \label{eq:matrixdiffeq}     .
 \end{IEEEeqnarray}
 
-In general, this non-homogeneous matrix differential equation has no solution. We can find solutions for particular cases.
+The roll rate, $\dot{\phi}(t)$ is still not specified by the assumptions we've made so far. In general, this non-homogeneous matrix differential equation has no solution. However, we can find solutions for particular cases.
 
 
 
@@ -119,6 +120,46 @@ In general, this non-homogeneous matrix differential equation has no solution. W
 
 
 
+\section{Solutions to Matrix Differential Equations}
+
+It is well known that the matrix exponential solves the matrix differential equation (\ref{eq:matrixdiffeq}) when $F(t)$ is constant with respect to time. In fact the class of problems for which this solution holds is larger. Consider the time derivative of the matrix exponential,
+%
+\begin{IEEEeqnarray}{rCl}
+ X(t)       & = & \exp \left\{ Q(t) \right\} = \sum_{n=0}^{\infty} \frac{1}{n!} Q(t)^n \nonumber \\
+ \dot{X}(t) & = & \sum_{n=1}^{\infty} \frac{1}{n!} \sum_{i=1}^{n} Q(t)^{n-i} \dot{Q}(t) Q(t)^{i-1} \nonumber \\
+            & = & \sum_{n=1}^{\infty} \frac{1}{n!} \underbrace{\sum_{i=1}^{n} \dot{Q}(t) Q(t)^{n-1}}_{n \dot{Q}(t) Q(t)^{n-1}} \label{eq:commute_with_deriv} \\
+            & = & \dot{Q}(t) \sum_{m=0}^{\infty} \frac{1}{m!} Q(t)^{m} \nonumber \\
+            & = & \dot{Q}(t) \exp\left\{ Q(t) \right\} \nonumber     .
+\end{IEEEeqnarray}
+
+Thus, the solution to (\ref{eq:matrixdiffeq}) follows by equating $\dot{Q}(t)$ and $F(t)$ and using the initial condition,
+%
+\begin{IEEEeqnarray}{rCl}
+ E(t) &=& \exp \left( \int_0^t F(\tau) d\tau + K \right) \nonumber \\
+      &=& \underbrace{\exp \left( \int_0^t F(\tau) d\tau \right)}_{A(t)} E_0    .
+\end{IEEEeqnarray}
+
+In (\ref{eq:commute_with_deriv}), the condition required is that $Q(t)$ should commute with its derivative, i.e. $Q(t)\dot{Q}(t)=\dot{Q}(t)Q(t)$. From this it is straightforward to show that,
+%
+\begin{IEEEeqnarray}{rCl}
+ Q(t)\dot{Q}(t) & = & \dot{Q}(t)Q(t) \nonumber \\
+ \int_0^t F(\tau) d\tau F(t) & = & F(t) \int_0^t F(\tau) d\tau \nonumber \\
+ \int_0^t F(\tau) F(t) d\tau & = & \int_0^t F(t) F(\tau) d\tau \nonumber \\
+ F(\tau) F(t) & = & F(t) F(\tau)     .
+\end{IEEEeqnarray}
+%
+%\begin{IEEEeqnarray}{rCl}
+% Q(t)\dot{Q}(t) & = & \dot{Q}(t)Q(t) \nonumber \\
+% Q(t) \lim_{h\rightarrow0} \left[ \frac{Q(t+h)-Q(t)}{h} \right] & = &  \lim_{h\rightarrow0} \left[ \frac{Q(t+h)-Q(t)}{h} \right] Q(t) \nonumber \\
+% \lim_{h\rightarrow0} \left[ \frac{Q(t)Q(t+h)-Q(t)^2}{h} \right] & = &  \lim_{h\rightarrow0} \left[ \frac{Q(t+h)Q(t)-Q(t)^2}{h} \right] \nonumber \\
+% Q(t)Q(t+h) & = & Q(t+h)Q(t)     .
+%\end{IEEEeqnarray}
+
+So the matrix exponential solves the matrix differential equation when $F(t)$ commutes with itself with a time offset.
+
+{\meta Is this necessary and sufficient? Or just sufficient? Ask a mathematician.}
+
+
 
 \section{Planar Motion}
 
@@ -129,22 +170,26 @@ The simplest solution results from the assumption $\dot{\phi}(t) = 0$. In this c
  F(t) & = & \begin{bmatrix}0 & \dot{\psi}(t) & 0 \\ - \dot{\psi}(t) & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix}
 \end{IEEEeqnarray}
 
-For a skew-symmetric matrix with only one non-zero term, $X(t)$, it may be shown that,
+Testing the sufficient condition,
 %
 \begin{IEEEeqnarray}{rCl}
- Y(t) &=& \exp \left(X(t)\right) \nonumber \\
- \dot{Y}(t) &=& \dot{X}(t) \exp \left(X(t)\right) \nonumber \\
-            &=& \dot{X}(t) Y(t)     .
+ F(t_1)F(t_2) = F(t_2) F(t_1) = \begin{bmatrix} -\dot{\psi}(t_1)\dot{\psi}(t_2) & 0 & 0 \\ 0 & -\dot{\psi}(t_1)\dot{\psi}(t_2) & 0 \\ 0 & 0 & 0 \end{bmatrix}     .
 \end{IEEEeqnarray}
 
-Note that this is true because $F(t_1)F(t_2)=F(t_2)F(t_1)$, which is also true if $X(t)$ is independent of $t$, but not in general. Using this identity, the solution is,
+Hence the equation is solved by,
 %
- \begin{IEEEeqnarray}{rCl}
- E(t) &=& \exp \left( \int_0^t F(\tau) d\tau + K \right) \nonumber \\
-      &=& \underbrace{\exp \left( \int_0^t F(\tau) d\tau \right)}_{A(t)} E_0    ,
+\begin{IEEEeqnarray}{rCl}
+ E(t) & = & A(t) E_0 \\
+ A(t) & = & \exp \left\{ \int_0^t F(\tau) d\tau \right\}
 \end{IEEEeqnarray}
 
-\noindent where $E_0 = E(0)$ and the second line follows from the intial conditions. By diagonalisation, the matrix exponential is given by,
+This may be solved by diagonalisation.
+%
+\begin{IEEEeqnarray}{rCl}
+ F(t) & = & \begin{bmatrix} \frac{i}{\sqrt{2}} & -\frac{i}{\sqrt{2}} & 0 \\ \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0 \\ 0 & 0 & 1 \end{bmatrix}  \begin{bmatrix} -\frac{a_N i}{s(t)} & 0 & 0 \\ 0 & \frac{a_N i}{s(t)} & 0 \\ 0 & 0 & 0 \end{bmatrix} \begin{bmatrix} \frac{i}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0 \\ \frac{-i}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0 \\ 0 & 0 & 1 \end{bmatrix}
+\end{IEEEeqnarray}
+
+After some tedious algebra, the matrix exponential is given by,
 %
 \begin{IEEEeqnarray}{rCl}
  A(t) &=& \begin{bmatrix} \cos(\Delta \psi(t)) & \sin(\Delta \psi(t)) & 0 \\
@@ -156,6 +201,23 @@ This describes motion within the plane spanned by $\mathbf{e}_{T}(0)$ and $\math
 
 The velocity and position are given by,
 %
+\begin{IEEEeqnarray}{rCl}
+ \mathbf{v}(t)^T & = & \dot{s}(t) \mathbf{e}_{T}(t)^T \nonumber \\
+                 & = & \dot{s}(t) \begin{bmatrix} 1 & 0 & 0 \end{bmatrix} E(t) \\
+                 & = & \begin{bmatrix} 1 & 0 & 0 \end{bmatrix} \dot{s}(t) A(t) E_0 \\
+ \mathbf{r}(t)^T & = & \int_0^t \mathbf{v}(\tau)^T d\tau \nonumber \\
+                 & = & \begin{bmatrix} 1 & 0 & 0 \end{bmatrix} \int_0^t \dot{s}(\tau) A(\tau) d\tau E_0 \nonumber \\
+                 & = & \begin{bmatrix} 1 & 0 & 0 \end{bmatrix}
+\end{IEEEeqnarray}
+
+{\tiny
+\begin{IEEEeqnarray}{rCl}
+ \int_0^t \dot{s}(\tau) A(\tau) d\tau & = &\begin{bmatrix} \frac{1}{a_N^2+ 4 a_T^2} \left\{ 2 a_T \left[\cos(\Delta \psi(t))\dot{s}(t)-\dot{s}_0\right] + a_N \sin(\Delta \psi(t))\dot{s}(t) \right\} & \frac{1}{a_N^2+ 4 a_T^2} \left\{ -a_N \left[\cos(\Delta \psi(t))\dot{s}(t)-\dot{s}_0\right] + 2 a_T \sin(\Delta \psi(t))\dot{s}(t) \right\} & 0 \\ \frac{1}{a_N^2+ 4 a_T^2} \left\{ a_N \left[\cos(\Delta \psi(t))\dot{s}(t)-\dot{s}_0\right] - 2 a_T \sin(\Delta \psi(t))\dot{s}(t) \right\} & \frac{1}{a_N^2+ 4 a_T^2} \left\{ 2 a_T \left[\cos(\Delta \psi(t))\dot{s}(t)-\dot{s}_0\right] + a_N \sin(\Delta \psi(t))\dot{s}(t) \right\} & 0 \\ 0 & 0 & 0 \end{bmatrix} \nonumber \\
+ & = & \begin{bmatrix} \cos(\Delta \psi(t))\dot{s}(t)-\dot{s}_0 & -\sin(\Delta \psi(t))\dot{s}(t) & 0 \\ \sin(\Delta \psi(t))\dot{s}(t) & \cos(\Delta \psi(t))\dot{s}(t)-\dot{s}_0 & 0 \\ 0 & 0 & 0 \end{bmatrix}
+\end{IEEEeqnarray}
+}
+
+
 \begin{IEEEeqnarray}{rCl}
  \mathbf{v}(t) &=& \dot{s}(t) \left[ \cos(\Delta \psi(t)) \mathbf{e}_{T}(0) + \sin(\Delta \psi(t)) \mathbf{e}_{N}(0) \right] \\
  \mathbf{r}(t) &=& \int_0^t \mathbf{v}(\tau) d\tau \nonumber \\
@@ -174,7 +236,7 @@ I thought it was possible to extend the model by making an assumption about the 
  \Delta \phi(t) &=& r_R t     .
 \end{IEEEeqnarray}
 
-However, this actually renders (\label{eq:matrixdiffeq}) unsolvable, so we're stuffed.
+However, this actually renders (\ref{eq:matrixdiffeq}) unsolvable, so we're stuffed.
 
 The most promising approach appears to be transforming $F(t)$, using an eigen-decomposition or the skew-symmetric decomposition,
 %

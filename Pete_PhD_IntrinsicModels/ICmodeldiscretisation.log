@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=pdflatex 2012.1.9)  3 MAY 2012 15:04
+This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=pdflatex 2012.1.9)  15 MAY 2012 20:30
 entering extended mode
 **ICmodeldiscretisation.tex
 
@@ -115,15 +115,27 @@ Package: IEEEtrantools 2007/01/11 V1.2 by Michael Shell
 \@IEEEeqnnumcols=\count102
 \@IEEEeqncolcnt=\count103
 \IEEEPARstartletwidth=\dimen123
-) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\mdwtools\mdwmath.sty"
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\color.sty"
+Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: pdftex.def on input line 130.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
+File: pdftex.def 2010/09/14 v0.05b Graphics/color for pdfTeX
+\Gread@gobject=\count104
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\mdwtools\mdwmath.sty"
 Package: mdwmath 1996/04/11 1.1 Nice mathematical things
-\sq@sqrt=\count104
+\sq@sqrt=\count105
 LaTeX Info: Redefining \sqrt on input line 84.
 )
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\mdwtools\mdwtab.sty"
 Package: mdwtab 1998/04/28 1.9 Table typesetting with style
-\tab@state=\count105
-\tab@columns=\count106
+\tab@state=\count106
+\tab@columns=\count107
 \tab@preamble=\toks20
 \tab@shortline=\toks21
 \extrarowheight=\dimen124
@@ -141,50 +153,82 @@ Package: mdwtab 1998/04/28 1.9 Table typesetting with style
 )
 (D:\pb404\Research\IntrinsicCoordinateModels\Pete_PhD_IntrinsicModels\ICmodeldi
 scretisation.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
- [1
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
 
-{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}]
-[2] [3] [4]
+("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count108
+\scratchdimen=\dimen133
+\scratchbox=\box29
+\nofMPsegments=\count109
+\nofMParguments=\count110
+\everyMPshowfont=\toks22
+\MPscratchCnt=\count111
+\MPscratchDim=\dimen134
+\MPnumerator=\count112
+\everyMPtoPDFconversion=\toks23
+) [1
+
+{C:/Users/pb404/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
+[2] [3]
+Overfull \hbox (109.08452pt too wide) in alignment at lines 183--186
+ [] [] [] [][]
+ []
+
+[4] [5] [6]
+Overfull \hbox (23.57129pt too wide) in paragraph at lines 306--306
+[]\OT1/cmr/bx/n/14.4 Matrix Ex-po-nen-tial of a class of Skew-Symmetric
+ []
+
+[7]
+Overfull \hbox (90.21753pt too wide) in alignment at lines 349--355
+ [] [] [] [][]
+ []
+
+
+(D:\pb404\Research\IntrinsicCoordinateModels\Pete_PhD_IntrinsicModels\ICmodeldi
+scretisation.bbl [8]) [9]
 (D:\pb404\Research\IntrinsicCoordinateModels\Pete_PhD_IntrinsicModels\ICmodeldi
 scretisation.aux) ) 
 Here is how much of TeX's memory you used:
- 1429 strings out of 494019
- 19491 string characters out of 3143883
- 80726 words of memory out of 3000000
- 4760 multiletter control sequences out of 15000+200000
+ 2015 strings out of 494019
+ 27389 string characters out of 3143883
+ 98353 words of memory out of 3000000
+ 5328 multiletter control sequences out of 15000+200000
  9681 words of font info for 35 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 27i,21n,20p,462b,258s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 27i,21n,20p,720b,265s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfon
 ts/cm/cmbx10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts
 /cm/cmbx12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/c
 m/cmbx7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
-mex10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmm
-i10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi5
-.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pf
-b><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><
-C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/
-Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Pro
-gram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Program
- Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Fil
-es (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files
- (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files (x
-86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on ICmodeldiscretisation.pdf (4 pages, 172533 bytes).
+mex10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cmextr
+a/cmex7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
+mmi10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmm
+i5.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.
+pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb
+><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C
+:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/P
+rogram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Progr
+am Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program F
+iles (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Fil
+es (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files 
+(x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files (x8
+6)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on ICmodeldiscretisation.pdf (9 pages, 225145 bytes).
 PDF statistics:
- 75 PDF objects out of 1000 (max. 8388607)
+ 100 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
